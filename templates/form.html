@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bank Marketing Prediction</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            background: #fff;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+            width: 100%;
+            max-width: 420px;
+            text-align: center;
+        }
+
+        h2 {
+            color: #333;
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            font-weight: 600;
+            text-align: left;
+            margin-top: 10px;
+            font-size: 14px;
+            color: #555;
+        }
+
+        input, select {
+            width: 100%;
+            padding: 12px;
+            margin-top: 5px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: 0.3s ease-in-out;
+        }
+
+        input:focus, select:focus {
+            border-color: #764ba2;
+            outline: none;
+            box-shadow: 0 0 5px rgba(118, 75, 162, 0.5);
+        }
+
+        button {
+            background: #764ba2;
+            color: #fff;
+            border: none;
+            padding: 12px;
+            font-size: 18px;
+            border-radius: 8px;
+            width: 100%;
+            margin-top: 20px;
+            cursor: pointer;
+            transition: background 0.3s ease-in-out;
+        }
+
+        button:hover {
+            background: #5a3e85;
+        }
+
+        #result {
+            margin-top: 20px;
+            font-size: 18px;
+            font-weight: bold;
+            color: #333;
+            padding: 10px;
+            border-radius: 8px;
+            background: #f4f4f4;
+        }
+
+        #main-container {
+            max-height: calc( 100vh - 100px );
+            overflow-y: scroll;
+        }
+    </style>
+</head>
+<body>
+    <div>
+        <div id="main-container" class="container">
+            <h2>Bank Marketing Prediction</h2>
+            <form id="predictionForm" onsubmit="submitForm(event)">
+                <label for="age">Age:</label>
+                <input type="number" id="age" name="age" required>
+
+                <label for="job">Job:</label>
+                <select id="job" name="job" required>
+                    <option value="admin.">Admin</option>
+                    <option value="blue-collar">Blue-collar</option>
+                    <option value="unemployed">Entrepreneur</option>
+                    <option value="housemaid">Housemaid</option>
+                    <option value="management">Management</option>
+                    <option value="retired">Retired</option>
+                    <option value="self-employed">Self-employed</option>
+                    <option value="services">Services</option>
+                    <option value="student">Student</option>
+                    <option value="technician">Technician</option>
+                    <option value="unemployed">Unemployed</option>
+                    <option value="unknown">Unknown</option>
+                </select>
+
+                <label for="marital">Marital Status:</label>
+                <select id="marital" name="marital" required>
+                    <option value="single">Single</option>
+                    <option value="married">Married</option>
+                    <option value="divorced">Divorced</option>
+                    <option value="unknown">Unknown</option>
+                </select>
+
+                <label for="education">Education:</label>
+                <select id="education" name="education" required>
+                    <option value="basic.4y">Basic 4 Years</option>
+                    <option value="basic.6y">Basic 6 Years</option>
+                    <option value="basic.9y">Basic 9 Years</option>
+                    <option value="high.school">High School</option>
+                    <option value="illiterate">Illiterate</option>
+                    <option value="professional.course">Professional Course</option>
+                    <option value="university.degree">University Degree</option>
+                    <option value="unknown">Unknown</option>
+                </select>
+
+                <label for="default">Default:</label>
+                <select id="default" name="default" required>
+                    <option value="0">No</option>
+                    <option value="1">Yes</option>
+                </select>
+
+                <label for="housing">Housing Loan:</label>
+                <select id="housing" name="housing" required>
+                    <option value="0">No</option>
+                    <option value="1">Yes</option>
+                </select>
+
+                <label for="loan">Personal Loan:</label>
+                <select id="loan" name="loan" required>
+                    <option value="0">No</option>
+                    <option value="1">Yes</option>
+                </select>
+
+                <button type="submit">Predict</button>
+            </form>
+
+            <h3 id="result"></h3>
+        </div>
+    </div>
+
+<script>
+    async function submitForm(event) {
+        event.preventDefault();
+        
+        const formData = new FormData(document.getElementById("predictionForm"));
+        const jsonData = {};
+        formData.forEach((value, key) => jsonData[key] = value);
+
+        try {
+            const response = await fetch('/predict', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(jsonData)
+            });
+            const result = await response.json();
+            document.getElementById("result").innerHTML = "Prediction: " + (result.prediction || result.error);
+        } catch (error) {
+            console.error("Error:", error);
+            document.getElementById("result").innerHTML = "Error processing request.";
+        }
+    }
+</script>
+</body>
+</html>
