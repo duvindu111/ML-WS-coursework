@@ -22,6 +22,10 @@ default_values = {
     'nr.employed': 4963.6
 }
 
+@app.route('/health', methods=['GET'])
+def health():
+    return 'OK', 200
+
 @app.route('/')
 def index():
     return render_template('form.html')
